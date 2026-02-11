@@ -3,6 +3,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './utils/db.js';
+import userRoutes from './routes/user.route.js';
+import companyRoutes from './routes/company.route.js';
+import jobRoutes from './routes/job.route.js';
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +26,12 @@ app.get('/home', (req, res) => {
   return res.status(200).json({ message: 'Welcome to the Job Portal API!' });
 });
 
+//API Routes
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/company', companyRoutes);
+app.use('/api/v1/job', jobRoutes);
+
+// Start the server
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running on port ${PORT}`);
