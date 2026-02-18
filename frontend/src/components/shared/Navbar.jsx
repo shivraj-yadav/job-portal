@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-
+import { useSelector } from "react-redux";
+import Profile from "../Profile";
 function Navbar() {
   // Temporary auth check
-  const user = false;
+
+  const { user } = useSelector((store) => store.auth);
 
   return (
     <div className="bg-white border-b">
