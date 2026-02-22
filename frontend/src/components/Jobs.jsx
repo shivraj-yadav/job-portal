@@ -1,86 +1,76 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import Navbar from "./shared/Navbar";
 import FilterCard from "./FilterCard";
 import Job from "./Job";
 import { useSelector } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Jobs = () => {
-  const { allJobs, searchedQuery } = useSelector((store) => store.job);
+  // 1. Extract data from Redux
+  const { allJobs = [], searchedQuery } = useSelector((store) => store.job);
 
-  const [filterJobs, setFilterJobs] = useState([]);
-
-  // 🔥 Animation Variants
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  // 🔥 Filtering Logic
-  useEffect(() => {
-    if (!allJobs) return;
-
-    if (searchedQuery) {
-      const filtered = allJobs.filter(
-        (job) =>
-          job.title?.toLowerCase().includes(searchedQuery.toLowerCase()) ||
-          job.description
-            ?.toLowerCase()
-            .includes(searchedQuery.toLowerCase()) ||
-          job.location?.toLowerCase().includes(searchedQuery.toLowerCase()),
-      );
-
-      setFilterJobs(filtered);
-    } else {
-      setFilterJobs(allJobs);
+  // 2. Derive filterJobs directly from allJobs and searchedQuery
+  // useMemo ensures this only recalculates when allJobs or searchedQuery changes
+  const filterJobs = useMemo(() => {
+    if (!searchedQuery || searchedQuery.trim() === "") {
+      return allJobs;
     }
+
+    const query = searchedQuery.toLowerCase().trim();
+
+    return allJobs.filter((job) => {
+      const title = job?.title?.toLowerCase() || "";
+      const description = job?.description?.toLowerCase() || "";
+      const location = job?.location?.toLowerCase() || "";
+
+      return (
+        title.includes(query) ||
+        description.includes(query) ||
+        location.includes(query)
+      );
+    });
   }, [allJobs, searchedQuery]);
 
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen">
       <Navbar />
-
-      <div className="max-w-7xl mx-auto mt-5">
-        <div className="flex gap-5">
-          {/* Filter Sidebar */}
-          <div className="w-1/5">
+      <div className="max-w-7xl mx-auto mt-5 px-4">
+        <div className="flex flex-col md:flex-row gap-5">
+          {/* Filter Section */}
+          <div className="w-full md:w-1/4">
             <FilterCard />
           </div>
 
-          {/* Job List Section */}
-          {filterJobs.length === 0 ? (
-            <div className="flex-1 flex justify-center items-center h-[70vh]">
-              <span className="text-gray-500 text-lg">Job not found 😔</span>
-            </div>
-          ) : (
-            <div className="flex-1 h-[88vh] overflow-y-auto pb-5 scroll-smooth">
-              <motion.div
-                className="grid grid-cols-3 gap-4"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                {filterJobs.map((job) => (
-                  <motion.div
-                    key={job?._id}
-                    variants={cardVariants}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <Job job={job} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          )}
+          {/* Job Listings Section */}
+          <div className="flex-1 h-[88vh] overflow-y-auto pb-5 no-scrollbar">
+            {filterJobs.length <= 0 ? (
+              <div className="flex flex-col items-center justify-center h-full">
+                <span className="text-xl font-semibold text-gray-600">
+                  No jobs found matching your criteria.
+                </span>
+                <p className="text-gray-400">
+                  Try adjusting your filters or search query.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                <AnimatePresence>
+                  {filterJobs.map((job) => (
+                    <motion.div
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3 }}
+                      key={job?._id}
+                    >
+                      <Job job={job} />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
