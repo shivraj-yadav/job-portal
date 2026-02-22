@@ -6,6 +6,7 @@ import {
   getCompanyById,
   updateCompany
 } from "../controllers/company.controller.js";
+import { singleUpload } from "../middlewares/mutler.js";
 
 const router = express.Router();
 
@@ -19,6 +20,6 @@ router.get("/", isAuthenticated, getCompany);
 router.get("/:id", isAuthenticated, getCompanyById);
 
 // Update company
-router.put("/:id", isAuthenticated, updateCompany);
+router.put("/:id", isAuthenticated,singleUpload, updateCompany);
 
 export default router;
