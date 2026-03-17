@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,14 +15,28 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const CompaniesTable = () => {
-  // Use a default empty array to prevent map errors
-  const { companies = [] } = useSelector((store) => store.company);
+  const { companies, searchCompanyByText } = useSelector(
+    (store) => store.company,
+  );
+  const [filterCompany, setFilterCompany] = useState(companies);
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const filteredCompany =
+      companies.length >= 0 &&
+      companies.filter((company) => {
+        if (!searchCompanyByText) {
+          return true;
+        }
+        return company?.name
+          ?.toLowerCase()
+          .includes(searchCompanyByText.toLowerCase());
+      });
+    setFilterCompany(filteredCompany);
+  }, [companies, searchCompanyByText]);
   return (
-    <div className="mt-5">
+    <div>
       <Table>
-        <TableCaption>A list of your registered companies</TableCaption>
+        <TableCaption>A list of your recent registered companies</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Logo</TableHead>
@@ -32,49 +46,35 @@ const CompaniesTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {companies.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={4}
-                className="text-center py-10 text-gray-500"
-              >
-                No companies found. Please register a company first.
+          {filterCompany?.map((company) => (
+            <tr>
+              <TableCell>
+                <Avatar>
+                  <AvatarImage src={company.logo} />
+                </Avatar>
               </TableCell>
-            </TableRow>
-          ) : (
-            companies.map((company) => (
-              <TableRow key={company._id}>
-                <TableCell>
-                  <Avatar>
-                    <AvatarImage src={company.logo} alt={company.name} />
-                  </Avatar>
-                </TableCell>
-                <TableCell>{company.name}</TableCell>
-                <TableCell>
-                  {/* Safe date split check */}
-                  {company.createdAt ? company.createdAt.split("T")[0] : "N/A"}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Popover>
-                    <PopoverTrigger>
-                      <MoreHorizontal className="cursor-pointer" />
-                    </PopoverTrigger>
-                    <PopoverContent className="w-32">
-                      <div
-                        onClick={() =>
-                          navigate(`/admin/companies/${company._id}`)
-                        }
-                        className="flex items-center gap-2 w-fit cursor-pointer hover:text-blue-600 transition-colors"
-                      >
-                        <Edit2 className="w-4" />
-                        <span>Edit</span>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
+              <TableCell>{company.name}</TableCell>
+              <TableCell>{company.createdAt.split("T")[0]}</TableCell>
+              <TableCell className="text-right cursor-pointer">
+                <Popover>
+                  <PopoverTrigger>
+                    <MoreHorizontal />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-32">
+                    <div
+                      onClick={() =>
+                        navigate(`/admin/companies/${company._id}`)
+                      }
+                      className="flex items-center gap-2 w-fit cursor-pointer"
+                    >
+                      <Edit2 className="w-4" />
+                      <span>Edit</span>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </TableCell>
+            </tr>
+          ))}
         </TableBody>
       </Table>
     </div>
