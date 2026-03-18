@@ -25,9 +25,24 @@ const JobDescription = () => {
   const dispatch = useDispatch();
 
   const applyJobHandler = async () => {
+    // ── Profile Completeness Verification ──
+    const p = user?.profile;
+    const isProfileComplete =
+      user?.fullname &&
+      user?.email &&
+      user?.phoneNumber &&
+      p?.bio?.trim() &&
+      p?.skills?.length > 0 &&
+      p?.resume;
+
+    if (!isProfileComplete) {
+      return toast.error("Please complete your profile (bio, skills, resume, etc.) in the Profile section before applying.");
+    }
+
     try {
-      const res = await axios.get(
+      const res = await axios.post(
         `${APPLICATION_API_END_POINT}/apply/${jobId}`,
+        {},
         { withCredentials: true },
       );
 
@@ -74,7 +89,7 @@ const JobDescription = () => {
           <h1 className="font-bold text-xl">{singleJob?.title}</h1>
           <div className="flex items-center gap-2 mt-4">
             <Badge className={"text-blue-700 font-bold"} variant="ghost">
-              {singleJob?.postion} Positions
+              {singleJob?.position} Positions
             </Badge>
             <Badge className={"text-[#F83002] font-bold"} variant="ghost">
               {singleJob?.jobType}
@@ -117,7 +132,7 @@ const JobDescription = () => {
         <h1 className="font-bold my-1">
           Experience:{" "}
           <span className="pl-4 font-normal text-gray-800">
-            {singleJob?.experience} yrs
+            {singleJob?.experienceLevel} yrs
           </span>
         </h1>
         <h1 className="font-bold my-1">

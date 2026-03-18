@@ -11,12 +11,12 @@ import { useSelector } from "react-redux";
 import useGetAppliedJobs from "./hooks/useGetAppliedJobs";
 
 // const skills = ["Html", "Css", "Javascript", "Reactjs"]
-const isResume = true;
 
 const Profile = () => {
   useGetAppliedJobs();
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
+  const isResume = !!user?.profile?.resume;
 
   return (
     <div>
@@ -26,7 +26,7 @@ const Profile = () => {
           <div className="flex items-center gap-4">
             <Avatar className="h-24 w-24">
               <AvatarImage
-                src="https://www.shutterstock.com/image-vector/circle-line-simple-design-logo-600nw-2174926871.jpg"
+                src={user?.profile?.profilePhoto}
                 alt="profile"
               />
             </Avatar>

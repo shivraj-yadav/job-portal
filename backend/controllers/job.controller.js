@@ -31,16 +31,19 @@ export const postJob = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
     }
 }
 
 export const getAllJobs = async (req, res) => {
     try {
         const keyword = req.query.keyword || "";
+        // Escape special regex characters to prevent ReDoS attacks
+        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const query = {
             $or: [
-                { title: { $regex: keyword, $options: "i" } },
-                { description: { $regex: keyword, $options: "i" } },
+                { title: { $regex: safeKeyword, $options: "i" } },
+                { description: { $regex: safeKeyword, $options: "i" } },
             ]
         };
         const jobs = await Job.find(query).populate({
@@ -58,6 +61,7 @@ export const getAllJobs = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
     }
 }
 
@@ -76,6 +80,7 @@ export const getJobById = async (req, res) => {
         return res.status(200).json({ job, success: true });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
     }
 }
 
@@ -84,8 +89,7 @@ export const getAdminJobs = async (req, res) => {
         const adminId = req.id;
         const jobs = await Job.find({ created_by: adminId }).populate({
             path:'company',
-            createdAt:-1
-        });
+        }).sort({ createdAt: -1 });
         if (!jobs) {
             return res.status(404).json({
                 message: "Jobs not found.",
@@ -98,5 +102,6 @@ export const getAdminJobs = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
     }
 }

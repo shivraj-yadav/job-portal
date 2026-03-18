@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import AdminJobsTable from "./AdminJobsTable";
@@ -27,8 +28,12 @@ const AdminJobs = () => {
             placeholder="Filter by name, role"
             onChange={(e) => setInput(e.target.value)}
           />
-          <Button onClick={() => navigate("/admin/jobs/create")}>
-            New Jobs
+          <Button
+            onClick={() => navigate("/admin/jobs/create")}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#F83002] to-[#f97316] hover:from-[#d42700] hover:to-[#ea6c00] text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105"
+          >
+            <Plus className="h-4 w-4" />
+            New Job
           </Button>
         </div>
         <AdminJobsTable />

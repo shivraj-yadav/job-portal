@@ -7,66 +7,63 @@ import Jobs from "./components/Jobs";
 import Browse from "./components/Browse";
 import Profile from "./components/Profile";
 import JobDescription from "./components/JobDescription";
-//Admin
+import ProtectedRoute from "./components/ProtectedRoute";
+// Admin
 import Companies from "./components/admin/Companies";
 import CompanyCreate from "./components/admin/CompanyCreate";
 import CompanySetup from "./components/admin/CompanySetup";
 import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
+
 const appRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
+  // ─── Public routes ───────────────────────────────────────────────
+  { path: "/login",  element: <Login /> },
+  { path: "/signup", element: <Signup /> },
+  { path: "/",       element: <Home /> },
+
+  // ─── Student protected routes ─────────────────────────────────────
   {
     path: "/jobs",
-    element: <Jobs />,
+    element: <ProtectedRoute allowedRole="student"><Jobs /></ProtectedRoute>,
   },
   {
     path: "/description/:id",
-    element: <JobDescription />,
+    element: <ProtectedRoute allowedRole="student"><JobDescription /></ProtectedRoute>,
   },
   {
     path: "/browse",
-    element: <Browse />,
+    element: <ProtectedRoute allowedRole="student"><Browse /></ProtectedRoute>,
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: <ProtectedRoute allowedRole="student"><Profile /></ProtectedRoute>,
   },
-  // Add more routes Admin
+
+  // ─── Recruiter (admin) protected routes ───────────────────────────
   {
     path: "/admin/companies",
-    element: <Companies />,
+    element: <ProtectedRoute allowedRole="recruiter"><Companies /></ProtectedRoute>,
   },
   {
     path: "/admin/companies/create",
-    element: <CompanyCreate />,
+    element: <ProtectedRoute allowedRole="recruiter"><CompanyCreate /></ProtectedRoute>,
   },
   {
     path: "/admin/companies/:id",
-    element: <CompanySetup />,
+    element: <ProtectedRoute allowedRole="recruiter"><CompanySetup /></ProtectedRoute>,
   },
   {
     path: "/admin/jobs",
-    element: <AdminJobs />,
+    element: <ProtectedRoute allowedRole="recruiter"><AdminJobs /></ProtectedRoute>,
   },
   {
     path: "/admin/jobs/create",
-    element: <PostJob />,
+    element: <ProtectedRoute allowedRole="recruiter"><PostJob /></ProtectedRoute>,
   },
   {
     path: "/admin/jobs/:id/applicants",
-    element: <Applicants />,
+    element: <ProtectedRoute allowedRole="recruiter"><Applicants /></ProtectedRoute>,
   },
 ]);
 

@@ -27,6 +27,18 @@ const Login = () => {
   const { loading } = useSelector((store) => store.auth);
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    // Frontend validation — clear, specific messages before hitting the API
+    if (!input.email) {
+      return toast.error("Please enter your email address.");
+    }
+    if (!input.password) {
+      return toast.error("Please enter your password.");
+    }
+    if (!input.role) {
+      return toast.error("Please select a role: Student or Recruiter.");
+    }
+
     try {
       dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
@@ -44,7 +56,6 @@ const Login = () => {
       console.log(error);
       toast.error(error.response?.data?.message || "An error occurred");
     } finally {
-      // CHANGE THIS TO FALSE
       dispatch(setLoading(false));
     }
   };

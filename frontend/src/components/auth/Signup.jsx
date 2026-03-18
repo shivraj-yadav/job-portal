@@ -34,7 +34,28 @@ const Signup = () => {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
-    const formData = new FormData(); //formdata object
+
+    // Frontend validation — specific messages for each missing field
+    if (!input.fullname.trim()) {
+      return toast.error("Please enter your full name.");
+    }
+    if (!input.email.trim()) {
+      return toast.error("Please enter your email address.");
+    }
+    if (!input.phoneNumber.trim()) {
+      return toast.error("Please enter your phone number.");
+    }
+    if (!input.password) {
+      return toast.error("Please enter a password.");
+    }
+    if (input.password.length < 6) {
+      return toast.error("Password must be at least 6 characters.");
+    }
+    if (!input.role) {
+      return toast.error("Please select a role: Student or Recruiter.");
+    }
+
+    const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
     formData.append("phoneNumber", input.phoneNumber);
@@ -56,7 +77,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "An error occurred");
     } finally {
       dispatch(setLoading(false));
     }

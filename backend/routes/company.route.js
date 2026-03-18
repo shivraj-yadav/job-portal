@@ -1,5 +1,6 @@
 import express from "express";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
+import authorizeRole from "../middlewares/authorizeRole.js";
 import {
   registerCompany,
   getCompany,
@@ -11,15 +12,15 @@ import { singleUpload } from "../middlewares/mutler.js";
 const router = express.Router();
 
 // Register new company
-router.post("/register", isAuthenticated, registerCompany);
+router.post("/register", isAuthenticated, authorizeRole('recruiter'), registerCompany);
 
 // Get all companies of logged-in user
-router.get("/", isAuthenticated, getCompany);
+router.get("/", isAuthenticated, authorizeRole('recruiter'), getCompany);
 
 // Get company by ID
-router.get("/:id", isAuthenticated, getCompanyById);
+router.get("/:id", isAuthenticated, authorizeRole('recruiter'), getCompanyById);
 
 // Update company
-router.put("/:id", isAuthenticated,singleUpload, updateCompany);
+router.put("/:id", isAuthenticated, authorizeRole('recruiter'), singleUpload, updateCompany);
 
 export default router;
