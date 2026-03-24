@@ -1,5 +1,6 @@
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
+import { sendEmail } from "../utils/sendEmail.js";
 
 export const applyJob = async (req, res) => {
     try {
@@ -110,7 +111,14 @@ export const updateStatus = async (req,res) => {
         };
 
         // find the application by applicantion id
-        const application = await Application.findOne({_id:applicationId});
+        const application = await Application.findOne({_id:applicationId})
+            .populate("applicant")
+            .populate({
+                path: "job",
+                populate: {
+                    path: "company"
+                }
+            });
         if(!application){
             return res.status(404).json({
                 message:"Application not found.",
@@ -118,9 +126,40 @@ export const updateStatus = async (req,res) => {
             })
         };
 
+        // check if already accepted or rejected
+        if(application.status !== 'pending') {
+            return res.status(400).json({
+                message:"Application status has already been updated and cannot be changed.",
+                success:false
+            });
+        }
+
         // update the status
         application.status = status.toLowerCase();
         await application.save();
+
+        if (application.status === 'accepted') {
+            const htmlContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h2 style="color: #6A38C2;">Congratulations, ${application.applicant.fullname}! 🎉</h2>
+                    <p style="font-size: 16px; color: #333;">
+                        We are absolutely thrilled to inform you that your application for the <strong>${application.job.title}</strong> position at <strong>${application.job.company.name}</strong> has been <strong>ACCEPTED</strong>.
+                    </p>
+                    <p style="font-size: 16px; color: #333;">
+                        Your profile stood out to us, and we are excited about the prospect of you joining the team at ${application.job.company.name}.
+                        We will be in touch very shortly to discuss the next steps in the process.
+                    </p>
+                    <br/>
+                    <p style="font-size: 16px; color: #333;">Best regards,</p>
+                    <p style="font-size: 16px; font-weight: bold; color: #6A38C2;">The Hiring Team</p>
+                </div>
+            `;
+            await sendEmail({
+                email: application.applicant.email,
+                subject: `Application Accepted: ${application.job.title} at ${application.job.company.name}`,
+                html: htmlContent
+            });
+        }
 
         return res.status(200).json({
             message:"Status updated successfully.",

@@ -45,7 +45,7 @@ const Job = ({ job }) => {
         <h1 className="font-bold text-lg my-2">{job?.title}</h1>
         <p className="text-sm text-gray-600">{job?.description}</p>
       </div>
-      <div className="flex items-center gap-2 mt-4">
+      <div className="flex items-center gap-2 mt-4 flex-wrap">
         <Badge className={"text-blue-700 font-bold"} variant="ghost">
           {job?.position} Positions
         </Badge>
@@ -56,14 +56,13 @@ const Job = ({ job }) => {
           {job?.salary}LPA
         </Badge>
       </div>
-      <div className="flex items-center gap-4 mt-4">
+      <div className="mt-6">
         <Button
           onClick={() => navigate(`/description/${job?._id}`)}
-          variant="outline"
+          className="w-full bg-gradient-to-r from-[#7209b7] to-[#43147e] text-white hover:shadow-md transition-all rounded-xl py-6 font-semibold tracking-wide"
         >
-          Details
+          View Details
         </Button>
-        <Button className="bg-[#7209b7]">Save For Later</Button>
       </div>
     </div>
   );

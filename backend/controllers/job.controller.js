@@ -70,7 +70,7 @@ export const getJobById = async (req, res) => {
         const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
             path:"applications"
-        });
+        }).populate("company");
         if (!job) {
             return res.status(404).json({
                 message: "Jobs not found.",
@@ -100,6 +100,35 @@ export const getAdminJobs = async (req, res) => {
             jobs,
             success: true
         })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error.", success: false });
+    }
+}
+
+export const deleteJob = async (req, res) => {
+    try {
+        const jobId = req.params.id;
+        const job = await Job.findById(jobId);
+
+        if (!job) {
+            return res.status(404).json({ message: "Job not found.", success: false });
+        }
+
+        // Verify ownership
+        if (job.created_by.toString() !== req.id) {
+            return res.status(403).json({
+                message: "You are not authorized to delete this job.",
+                success: false
+            });
+        }
+
+        await Job.findByIdAndDelete(jobId);
+
+        return res.status(200).json({
+            message: "Job deleted successfully.",
+            success: true
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Internal server error.", success: false });

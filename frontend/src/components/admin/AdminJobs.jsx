@@ -21,16 +21,16 @@ const AdminJobs = () => {
   return (
     <div>
       <Navbar />
-      <div className="max-w-6xl mx-auto my-10">
-        <div className="flex items-center justify-between my-5">
+      <div className="max-w-6xl mx-auto my-10 px-4 md:px-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between my-5 gap-4 sm:gap-0">
           <Input
-            className="w-fit"
+            className="w-full sm:w-fit"
             placeholder="Filter by name, role"
             onChange={(e) => setInput(e.target.value)}
           />
           <Button
             onClick={() => navigate("/admin/jobs/create")}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#F83002] to-[#f97316] hover:from-[#d42700] hover:to-[#ea6c00] text-white font-semibold px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#F83002] to-[#f97316] hover:from-[#d42700] hover:to-[#ea6c00] text-white font-semibold w-full sm:w-auto px-5 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105"
           >
             <Plus className="h-4 w-4" />
             New Job

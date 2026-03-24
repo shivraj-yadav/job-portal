@@ -5,7 +5,8 @@ import {
   registerCompany,
   getCompany,
   getCompanyById,
-  updateCompany
+  updateCompany,
+  deleteCompany
 } from "../controllers/company.controller.js";
 import { singleUpload } from "../middlewares/mutler.js";
 
@@ -22,5 +23,8 @@ router.get("/:id", isAuthenticated, authorizeRole('recruiter'), getCompanyById);
 
 // Update company
 router.put("/:id", isAuthenticated, authorizeRole('recruiter'), singleUpload, updateCompany);
+
+// Delete company
+router.delete("/:id", isAuthenticated, authorizeRole('recruiter'), deleteCompany);
 
 export default router;

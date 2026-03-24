@@ -5,6 +5,8 @@ import Job from "./Job";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { Filter } from "lucide-react";
+
 // Parse salary string like "0-40k", "40k-1lakh", "1lakh-5lakh", "5lakh+"
 // into a [min, max] range in LPA numbers
 const parseSalaryRange = (salaryStr) => {
@@ -23,6 +25,7 @@ const parseSalaryRange = (salaryStr) => {
 
 const Jobs = () => {
   const { allJobs = [], searchedQuery, filters = {} } = useSelector((store) => store.job);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = React.useState(false);
 
   const filterJobs = useMemo(() => {
     let results = allJobs;
@@ -71,23 +74,36 @@ const Jobs = () => {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
-      <div className="max-w-7xl mx-auto mt-5 px-4">
-        <div className="flex flex-col md:flex-row gap-5">
-          {/* Filter Sidebar */}
-          <div className="w-full md:w-72 flex-shrink-0">
+      <div className="max-w-7xl mx-auto mt-5 px-4 sm:px-6 lg:px-8">
+        
+        {/* Mobile Filter Toggle */}
+        <div className="md:hidden mb-4 flex justify-between items-center">
+          <h2 className="text-xl font-bold text-gray-800">Available Jobs ({filterJobs.length})</h2>
+          <button 
+            onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+            className="flex items-center gap-2 bg-white px-4 py-2 border border-gray-200 rounded-lg shadow-sm text-gray-700 font-medium hover:bg-gray-50 active:bg-gray-100 transition-colors"
+          >
+            <Filter className="h-4 w-4" />
+            {isMobileFilterOpen ? "Hide Filters" : "Filters"}
+          </button>
+        </div>
+
+        <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
+          {/* Filter Sidebar (Desktop mostly, toggled on Mobile) */}
+          <div className={`${isMobileFilterOpen ? "block" : "hidden"} md:block w-full md:w-64 lg:w-72 flex-shrink-0 transition-all`}>
             <FilterCard />
           </div>
 
-          {/* Job Listings */}
-          <div className="flex-1 h-[88vh] overflow-y-auto pb-5 no-scrollbar">
+          {/* Job Listings Container */}
+          <div className="flex-1 h-auto md:h-[88vh] overflow-y-auto pb-5 md:pr-2 no-scrollbar">
             {filterJobs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full gap-2">
-                <span className="text-4xl">🔍</span>
-                <span className="text-xl font-semibold text-gray-600">No jobs found</span>
-                <p className="text-gray-400 text-sm">Try adjusting your filters or search query.</p>
+              <div className="flex flex-col items-center justify-center h-[50vh] md:h-full gap-3 bg-white rounded-xl border border-gray-100 p-8 text-center shadow-sm">
+                <span className="text-5xl mb-2">🔍</span>
+                <span className="text-2xl font-bold text-gray-800">No jobs found</span>
+                <p className="text-gray-500 max-w-sm">Try adjusting your filters, location, or search query to find more opportunities.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
                 <AnimatePresence>
                   {filterJobs.map((job) => (
                     <motion.div
@@ -97,6 +113,7 @@ const Jobs = () => {
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
                       key={job?._id}
+                      className="h-full"
                     >
                       <Job job={job} />
                     </motion.div>

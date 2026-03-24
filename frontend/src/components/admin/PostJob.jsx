@@ -73,25 +73,25 @@ const PostJob = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="max-w-3xl mx-auto my-10 px-4">
+      <div className="max-w-3xl mx-auto my-6 md:my-10 px-4">
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 bg-gradient-to-br from-[#F83002] to-[#f97316] rounded-xl shadow">
-            <Briefcase className="h-6 w-6 text-white" />
+        <div className="flex items-center gap-3 mb-6 md:mb-8">
+          <div className="p-2 md:p-3 bg-gradient-to-br from-[#F83002] to-[#f97316] rounded-xl shadow">
+            <Briefcase className="h-5 w-5 md:h-6 md:w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">Post a New Job</h1>
-            <p className="text-sm text-gray-500">Fill in the details to publish a job opening</p>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800">Post a New Job</h1>
+            <p className="text-xs md:text-sm text-gray-500">Fill in the details to publish a job opening</p>
           </div>
         </div>
 
         {/* Form Card */}
         <form
           onSubmit={submitHandler}
-          className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8"
+          className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 md:p-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
 
             {/* Title */}
             <div className="flex flex-col gap-1">

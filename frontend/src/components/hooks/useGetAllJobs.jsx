@@ -10,9 +10,6 @@ const useGetAllJobs = () => {
   const { user } = useSelector((store) => store.auth);
 
   useEffect(() => {
-    // Only fetch if the user is authenticated
-    if (!user) return;
-
     const fetchAllJobs = async () => {
       try {
         const res = await axios.get(
@@ -27,7 +24,7 @@ const useGetAllJobs = () => {
       }
     };
     fetchAllJobs();
-  }, [searchedQuery, user]);
+  }, [searchedQuery]);
 };
 
 export default useGetAllJobs;

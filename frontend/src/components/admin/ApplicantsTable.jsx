@@ -138,31 +138,35 @@ const ApplicantsTable = () => {
 
               {/* Action */}
               <TableCell className="text-right">
-                <Popover>
-                  <PopoverTrigger>
-                    <MoreHorizontal
-                      className={`h-5 w-5 cursor-pointer ${
-                        updatingId === item._id ? "animate-pulse text-gray-300" : "text-gray-400 hover:text-gray-700"
-                      }`}
-                    />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-36 p-2">
-                    <div
-                      onClick={() => statusHandler("Accepted", item._id)}
-                      className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-green-50 text-sm text-green-700"
-                    >
-                      <CheckCircle className="w-4 h-4" />
-                      Accept
-                    </div>
-                    <div
-                      onClick={() => statusHandler("Rejected", item._id)}
-                      className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-red-50 text-sm text-red-600 mt-1"
-                    >
-                      <XCircle className="w-4 h-4" />
-                      Reject
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                {currentStatus === "pending" ? (
+                  <Popover>
+                    <PopoverTrigger>
+                      <MoreHorizontal
+                        className={`h-5 w-5 cursor-pointer ml-auto ${
+                          updatingId === item._id ? "animate-pulse text-gray-300" : "text-gray-400 hover:text-gray-700"
+                        }`}
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-36 p-2">
+                      <div
+                        onClick={() => statusHandler("Accepted", item._id)}
+                        className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-green-50 text-sm text-green-700"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        Accept
+                      </div>
+                      <div
+                        onClick={() => statusHandler("Rejected", item._id)}
+                        className="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer hover:bg-red-50 text-sm text-red-600 mt-1"
+                      >
+                        <XCircle className="w-4 h-4" />
+                        Reject
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                ) : (
+                  <span className="text-gray-400 text-xs italic">Reviewed</span>
+                )}
               </TableCell>
             </TableRow>
           );
