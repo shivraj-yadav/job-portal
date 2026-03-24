@@ -1,19 +1,18 @@
-# JobHunt - Modern Job Portal Platform
+# JobHunt – Full-Stack Job Portal Platform
 
-A full-stack, premium Job Portal web application built with the **MERN** (MongoDB, Express, React, Node.js) stack. This platform connects **students** looking for their dream jobs with **recruiters** looking to hire top talent.
-
+A full-stack Job Portal built using the MERN stack (MongoDB, Express, React, Node.js). It enables students to discover job opportunities and recruiters to efficiently manage hiring through a streamlined and intuitive platform.
 ## 🚀 Key Features
 
-### For Candidates (Students)
-- **Advanced Job Search & Filtering**: Client-side and server-side filtering by keyword, location, industry, and salary.
-- **Premium UI/UX**: A highly modern, glassmorphism-inspired landing page, sleek job cards, and responsive design powered by TailwindCSS and Framer Motion.
-- **Unified Job Description Page**: Detailed view of job requirements, company information, and quick-apply functionality.
-- **Real-Time Automated Emails**: Candidates automatically receive beautifully formatted HTML acceptance emails via Nodemailer when a recruiter approves their application.
+### 👨‍🎓 For Candidates
+- Smart job search with filters (role, location, salary)
+- Clean and responsive UI for seamless browsing
+- Detailed job view with quick apply option
+- Automated email notifications on application status
 
-### For Recruiters
-- **Company & Job Management**: Seamlessly register companies, upload logos, and post new job openings.
-- **Applicant Tracking System (ATS)**: View a dedicated dashboard of all applicants for a specific job, including their resumes and contact details.
-- **Status Lockdown Control**: Easily accept or reject candidates. Once a decision is made, the application status is securely locked on both the frontend and backend to prevent data tampering.
+### 🧑‍💼 For Recruiters
+- Easy company and job posting management
+- Applicant tracking dashboard with candidate details
+- Accept/reject candidates with secure status control
 
 ---
 
