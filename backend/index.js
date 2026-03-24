@@ -12,6 +12,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Tell Express to trust the proxy (Render load balancer) to correctly process secure cookies
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
